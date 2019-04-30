@@ -1,4 +1,4 @@
-//package ik.viz.tst
+;//package ik.viz.tst
 //
 //import org.junit.runner.RunWith
 //import org.scalatest.FlatSpec

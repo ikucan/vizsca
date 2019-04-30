@@ -14,7 +14,6 @@ val vscl_tst = "3.0.1"
 lazy val tst_lbs = Seq(
   libraryDependencies += "junit" % "junit" % "4.10",
   libraryDependencies += "org.scalactic" %% "scalactic" % vscl_tst,
-  //libraryDependencies += "org.scalatest" %% "scalatest" % vscl_tst % Test
   libraryDependencies += "org.scalatest" %% "scalatest" % vscl_tst
 )
 
@@ -35,16 +34,16 @@ lazy val cmmn = Seq(
   //javaOptions in run += "-Djava.library.path=/workstem/g3/jvm/lib/linux",
   fork := true,
   connectInput in run := true,
-
-) ++ log4j_lbs ++ tst_lbs
+) ++ log4j_lbs ++ tst_lbs ++ swng_lbs
 
 /**
   * project definitions
   */
 lazy val util = (project in file("util")).settings(cmmn)
-lazy val viz = (project in file("viz")).dependsOn(util).settings(cmmn).settings(swng_lbs)
+lazy val viz = (project in file("viz")).dependsOn(util).settings(cmmn)
+lazy val test = (project in file("test")).dependsOn(viz).settings(cmmn)
 
 /**
   * convenient project groupings
   */
-lazy val all = (project in file(".")).aggregate(util, viz)
+lazy val all = (project in file(".")).aggregate(util, viz, test)
