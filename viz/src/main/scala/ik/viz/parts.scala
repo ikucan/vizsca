@@ -488,3 +488,58 @@ class zzoom_pad(sktch: p_sktch) extends p_area(sktch, Int.MaxValue) {
     }
   }
 }
+
+
+
+class lgnd(sktch: p_sktch) extends p_area(sktch) {
+  var x_prt = () => 20f
+  var y_prt = () => 20f
+  var w_prt = () => w() - 2 * x_prt()
+  var h_prt = () => h() - 2 * y_prt()
+  var clr_frm = p.color(0xd7, 0xd7, 0xe0, 0x0f)
+  var clr_prt = p.color(0xf9, 0xf4, 0xfa, 0xaa)
+
+  override def draw_impl = if (visible || D) {
+    // recalculate all the parameters into absolute cartesian space. we are basically dealing with
+    // two squares, the inner and the outter so just evaluate the eight points efficiently
+    val x0_o = xoff()
+    val y0_o = yoff()
+    val x1_o = x0_o + w()
+    val y1_o = y0_o + h()
+
+    val x0_i = x0_o + x_prt()
+    val y0_i = y0_o + y_prt()
+    val x1_i = x0_i + w_prt()
+    val y1_i = y0_i + h_prt()
+
+    if (smth) p.smooth()
+
+    if (visible) {
+      p.noStroke
+      p.fill(clr_frm)
+      p.quad(x0_o, y0_o, x1_o, y0_o, x1_o, y0_i, x0_o, y0_i)
+      p.quad(x0_o, y0_i, x0_i, y0_i, x0_i, y1_i, x0_o, y1_i)
+      p.quad(x0_o, y1_i, x1_o, y1_i, x1_o, y1_o, x0_o, y1_o)
+      p.quad(x1_i, y0_i, x1_o, y0_i, x1_o, y1_i, x1_i, y1_i)
+      p.fill(clr_prt)
+      p.quad(x0_i, y0_i, x1_i, y0_i, x1_i, y1_i, x0_i, y1_i)
+    }
+    if (D) { // debug
+      p.fill(0x99, 0xbb, 0x66)
+      p.textFont(new PFont(new Font("Arial", Font.PLAIN, 10), false))
+      p.text("view port in debug mode", x0_o + 5, y0_o + 45)
+      p.stroke(0xbb, 0xcc, 0x44)
+      p.line(x0_o, (y1_i - y0_i) / 2 + y0_i, x1_o, (y1_i - y0_i) / 2 + y0_i)
+      p.line(x0_o, y0_o, x1_o, y1_o)
+      p.line(x0_i, y1_i, x1_i, y0_i)
+      p.line(x0_o, y0_o, x1_o, y0_o)
+      p.line(x1_o, y0_o, x1_o, y1_o)
+      p.line(x1_o, y1_o, x0_o, y1_o)
+      p.line(x0_o, y1_o, x0_o, y0_o)
+      p.line(x0_i, y0_i, x1_i, y0_i)
+      p.line(x1_i, y0_i, x1_i, y1_i)
+      p.line(x1_i, y1_i, x0_i, y1_i)
+      p.line(x0_i, y1_i, x0_i, y0_i)
+    }
+  }
+}

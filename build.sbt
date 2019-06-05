@@ -29,7 +29,7 @@ lazy val cmmn = Seq(
   organization := "ik.org",
   version := "0.1.0",
   scalaVersion := "2.12.6",
-  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:reflectiveCalls", "-language:postfixOps", "-language:implicitConversions"),
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:reflectiveCalls", "-language:postfixOps", "-language:implicitConversions", " -language:existentials"),
   javaOptions in run += "-Xmx8G",
   //javaOptions in run += "-Djava.library.path=/workstem/g3/jvm/lib/linux",
   fork := true,

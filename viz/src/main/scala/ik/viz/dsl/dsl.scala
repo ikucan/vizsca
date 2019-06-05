@@ -95,7 +95,7 @@ object plt {
   def apply(x: Int, y: Int, w: Int, h: Int): plt = {
     val pnl = new BorderPanel() {}
     val f = new Frame {
-      title = "viz plot"
+      title = "vizsca plot"
       visible = true
       size = new Dimension(w, h)
       location = new Point(x, y)
