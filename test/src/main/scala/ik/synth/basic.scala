@@ -1,3 +1,5 @@
+package ik.synth
+
 import ik.viz._
 import ik.viz.dsl._
 import math.sin

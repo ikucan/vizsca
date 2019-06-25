@@ -22,6 +22,12 @@ lazy val swng_lbs = Seq(
   libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "2.0.0"
 )
 
+lazy val parq_lbs = Seq(
+  libraryDependencies += "org.apache.parquet" % "parquet" % "1.10.1",
+  libraryDependencies += "org.apache.hadoop" % "hadoop-common" % "3.2.0"
+  //libraryDependencies += "org.apache.parquet" % "parquet-hadoop" % "1.10.1"
+)
+
 /**
   * common settings
   */
@@ -34,7 +40,7 @@ lazy val cmmn = Seq(
   //javaOptions in run += "-Djava.library.path=/workstem/g3/jvm/lib/linux",
   fork := true,
   connectInput in run := true,
-) ++ log4j_lbs ++ tst_lbs ++ swng_lbs
+) ++ log4j_lbs ++ parq_lbs ++ tst_lbs ++ swng_lbs
 
 /**
   * project definitions
