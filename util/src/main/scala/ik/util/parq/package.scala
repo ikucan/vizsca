@@ -1,19 +1,13 @@
 package ik.util
 
-import javax.lang.model.`type`.PrimitiveType
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
-import org.apache.parquet.column.page.DataPage.Visitor
-import org.apache.parquet.column.page.{DataPageV1, DataPageV2}
-import org.apache.parquet.example.data.simple.SimpleGroup
 import org.apache.parquet.example.data.simple.convert.GroupRecordConverter
 import org.apache.parquet.hadoop.ParquetFileReader
 import org.apache.parquet.hadoop.util.HadoopInputFile
 import org.apache.parquet.io.ColumnIOFactory
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
-import scala.collection.mutable.ArrayBuffer
 import scala.collection.JavaConverters._
-import scala.collection.mutable.ArrayBuffer
 import ik.util.df._
 
 package object parq {
@@ -46,7 +40,7 @@ package object parq {
         case PrimitiveTypeName.INT64 => new col_bldr[Long](n_records)
         case PrimitiveTypeName.INT32 => new col_bldr[Int](n_records)
         case PrimitiveTypeName.FLOAT => new col_bldr[Float](n_records)
-        case PrimitiveTypeName.BINARY => new col_bldr[String](n_records)
+        case PrimitiveTypeName.BINARY => new col_bldr[Symbol](n_records)
         case x => throw new RuntimeException(raw"unhandled frame type:>> ${x}")
       }
     }
@@ -66,7 +60,7 @@ package object parq {
             case PrimitiveTypeName.INT64 => bldrs(col_idx).asInstanceOf[col_bldr[Long]] += simpleGroup.getLong(col_idx, 0)
             case PrimitiveTypeName.INT32 => bldrs(col_idx).asInstanceOf[col_bldr[Int]] += simpleGroup.getInteger(col_idx, 0)
             case PrimitiveTypeName.FLOAT => bldrs(col_idx).asInstanceOf[col_bldr[Float]] += simpleGroup.getFloat(col_idx, 0)
-            case PrimitiveTypeName.BINARY => bldrs(col_idx).asInstanceOf[col_bldr[String]] += simpleGroup.getBinary(col_idx, 0).toStringUsingUTF8
+            case PrimitiveTypeName.BINARY => bldrs(col_idx).asInstanceOf[col_bldr[Symbol]] += Symbol(simpleGroup.getBinary(col_idx, 0).toStringUsingUTF8)
             case x => throw new RuntimeException(raw"unhandled frame type:>> ${x}")
           }
         }
@@ -79,11 +73,11 @@ package object parq {
     for (col_idx <- 0 until typ_names.size) {
       if (!names(col_idx).startsWith("__index_")) {
         typ_names(col_idx) match {
-          case PrimitiveTypeName.DOUBLE => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Double]])
-          case PrimitiveTypeName.INT64 => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Long]])
-          case PrimitiveTypeName.INT32 => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Int]])
-          case PrimitiveTypeName.FLOAT => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Float]])
-          case PrimitiveTypeName.BINARY => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[String]])
+          case PrimitiveTypeName.DOUBLE => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Double]].arr)
+          case PrimitiveTypeName.INT64 => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Long]].arr)
+          case PrimitiveTypeName.INT32 => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Int]].arr)
+          case PrimitiveTypeName.FLOAT => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Float]].arr)
+          case PrimitiveTypeName.BINARY => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Symbol]].arr)
           case x => throw new RuntimeException(raw"unhandled frame type:>> ${x}")
         }
       }
