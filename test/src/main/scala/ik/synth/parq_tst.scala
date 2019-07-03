@@ -1,7 +1,5 @@
 package ik.synth
 
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.Path
 import org.apache.parquet.column.page.PageReadStore
 import org.apache.parquet.example.data.Group
 import org.apache.parquet.example.data.simple.convert.GroupRecordConverter
