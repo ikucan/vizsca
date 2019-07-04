@@ -12,7 +12,6 @@ import ik.viz.shp2._
 
 object swps_tst {
 
-
   def cln(t: Array[Long], v: Array[Double]) = {
     val idx = v((d: Double) => !d.isNaN)
     (t(idx), v(idx))

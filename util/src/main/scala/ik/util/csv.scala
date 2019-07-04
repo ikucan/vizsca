@@ -3,6 +3,8 @@ package ik.util
 import scala.collection.mutable.ArrayBuffer
 import java.io._
 import java.text.SimpleDateFormat
+import java.time._
+import java.time.format._
 
 class csv_err(msg: String, cause: Throwable) extends RuntimeException(msg, cause) {
   def this(msg: String) = this(msg, null)
@@ -20,6 +22,15 @@ object csv {
     vals map { x => if (x.size == 0) 0 else fmt.parse(x).getTime }
   }
 
+  def str2inst(vals: Array[String], frmt: Option[String] = None, tz_offst: Int = 0) = {
+    if (frmt == None) {
+      vals map { x => if (x.size == 0) 0 else Instant.parse(x).toEpochMilli() }
+    } else {
+      val fmt = DateTimeFormatter.ofPattern(frmt.get)
+      vals map { x => if (x.size == 0) 0 else LocalDateTime.parse(x, fmt).toInstant(ZoneOffset.ofHours(tz_offst)).toEpochMilli() }
+    }
+  }
+
   val dlm = ','
 
   def prs_ln(s: String) = {
@@ -30,6 +41,7 @@ object csv {
       i0 = i1 + 1
       i1 = s.indexOf(dlm, i0)
     }
+    tkns += s.substring(i0, s.size)
     tkns.toArray
   }
 

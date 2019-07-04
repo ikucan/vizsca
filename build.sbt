@@ -25,6 +25,7 @@ lazy val swng_lbs = Seq(
 lazy val parq_lbs = Seq(
   libraryDependencies += "org.apache.parquet" % "parquet-common" % "1.10.1",
   libraryDependencies += "org.apache.parquet" % "parquet-avro" % "1.10.1",
+  libraryDependencies += "org.apache.parquet" % "parquet-column" % "1.10.1",
   libraryDependencies += "org.apache.parquet" % "parquet-arrow" % "1.10.1",
   libraryDependencies += "org.apache.parquet" % "parquet-hadoop" % "1.10.1",
   libraryDependencies += "org.apache.hadoop"  % "hadoop-common" % "3.2.0",

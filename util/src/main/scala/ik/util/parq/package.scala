@@ -27,6 +27,7 @@ package object parq {
 
   def rd(fnm: String): frm = {
     val reader = ParquetFileReader.open(HadoopInputFile.fromPath(new Path(fnm), new Configuration))
+
     val schema = reader.getFooter.getFileMetaData.getSchema
     val fields = schema.getFields
     val n_records = reader.getRecordCount.toInt
@@ -40,7 +41,7 @@ package object parq {
         case PrimitiveTypeName.INT64 => new col_bldr[Long](n_records)
         case PrimitiveTypeName.INT32 => new col_bldr[Int](n_records)
         case PrimitiveTypeName.FLOAT => new col_bldr[Float](n_records)
-        case PrimitiveTypeName.BINARY => new col_bldr[Symbol](n_records)
+        case PrimitiveTypeName.BINARY => new col_bldr[String](n_records)
         case x => throw new RuntimeException(raw"unhandled frame type:>> ${x}")
       }
     }
@@ -56,11 +57,24 @@ package object parq {
 
         for (col_idx <- 0 until typ_names.size) {
           typ_names(col_idx) match {
-            case PrimitiveTypeName.DOUBLE => bldrs(col_idx).asInstanceOf[col_bldr[Double]] += simpleGroup.getDouble(col_idx, 0)
+
+            case PrimitiveTypeName.DOUBLE =>
+              try {
+                bldrs(col_idx).asInstanceOf[col_bldr[Double]] += simpleGroup.getDouble(col_idx, 0)
+              } catch {
+                case re: RuntimeException =>
+                  bldrs(col_idx).asInstanceOf[col_bldr[Double]] += Double.NaN
+              }
             case PrimitiveTypeName.INT64 => bldrs(col_idx).asInstanceOf[col_bldr[Long]] += simpleGroup.getLong(col_idx, 0)
             case PrimitiveTypeName.INT32 => bldrs(col_idx).asInstanceOf[col_bldr[Int]] += simpleGroup.getInteger(col_idx, 0)
-            case PrimitiveTypeName.FLOAT => bldrs(col_idx).asInstanceOf[col_bldr[Float]] += simpleGroup.getFloat(col_idx, 0)
-            case PrimitiveTypeName.BINARY => bldrs(col_idx).asInstanceOf[col_bldr[Symbol]] += Symbol(simpleGroup.getBinary(col_idx, 0).toStringUsingUTF8)
+            case PrimitiveTypeName.FLOAT =>
+              try {
+                bldrs(col_idx).asInstanceOf[col_bldr[Float]] += simpleGroup.getFloat(col_idx, 0)
+              } catch {
+                case re: RuntimeException =>
+                  bldrs(col_idx).asInstanceOf[col_bldr[Float]] += Float.NaN
+              }
+            case PrimitiveTypeName.BINARY => bldrs(col_idx).asInstanceOf[col_bldr[String]] += simpleGroup.getBinary(col_idx, 0).toStringUsingUTF8
             case x => throw new RuntimeException(raw"unhandled frame type:>> ${x}")
           }
         }
