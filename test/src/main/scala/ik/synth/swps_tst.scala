@@ -1,12 +1,10 @@
 package ik.synth
 
-import ik.viz._
 import ik.viz.dsl._
 import ik.util.ui.clr
 import ik.util.df._
 import ik.util.vctr._
 import ik.util.csv
-
 import ik.viz.dot2
 
 
