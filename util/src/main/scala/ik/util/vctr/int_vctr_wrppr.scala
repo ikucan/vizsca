@@ -162,6 +162,8 @@ class int_vctr_wrppr(v: Array[Int]) extends vctr[Int](v) with vctr_arthmtc[Int] 
     sum
   }
 
+  override def is_nan: Array[Boolean] = throw new vct_err("is NaN test not supported for the Int type.")
+
   override def mean: Double = sum.toDouble / v.size.toDouble
 
   override lazy val mntnc: Boolean = {

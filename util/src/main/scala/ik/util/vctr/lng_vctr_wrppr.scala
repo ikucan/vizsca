@@ -157,6 +157,8 @@ class lng_vctr_wrppr(v: Array[Long]) extends vctr[Long](v) with vctr_arthmtc[Lon
     sum
   }
 
+  override def is_nan: Array[Boolean] = throw new vct_err("is NaN test not supported for the Long type.")
+
   override def mean: Double = sum.toDouble / v.size.toDouble
 
   override lazy val mntnc: Boolean = {

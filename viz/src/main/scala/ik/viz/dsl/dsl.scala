@@ -100,7 +100,7 @@ object plt {
       size = new Dimension(w, h)
       location = new Point(x, y)
       peer.setMinimumSize(new Dimension(w, h))
-      peer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+      peer.setDefaultCloseOperation(3) //EXIT_ON_CLOSE is now hidden but value is 3
       peer.setContentPane(pnl.peer)
     }
     new plt {
@@ -216,11 +216,11 @@ object sctr2 {
  * scatter
  * encapsulation classes for different cases of parametrisation
  */
-case class lbls2(val x: Array[Double], val y: Array[Double], val l: Array[String], val sz: Array[Int], val xoff: Array[Int], val yoff: Array[Int], val clr: Array[clr], fnt: String) extends ftr
+case class lbls2(val x: Array[Double], val y: Array[Double], val l: Array[String], val sz: Array[Int], val xoff: Array[Int], val yoff: Array[Int], val clr: Array[clr], val rot: Array[Int], fnt: String) extends ftr
 
 object lbls {
-  def apply(x: Array[Double], y: Array[Double], l: Array[String], sz: Array[Int], xoff: Array[Int], yoff: Array[Int], clr: Array[clr], fnt: String) = new lbls2(x, y, l, sz, xoff, yoff, clr, fnt)
-  def apply(x: Array[Double], y: Array[Double], l: Array[String], sz: Int, xoff: Int = 0, yoff: Int = 0, clr: clr = 0, fnt: String = "Arial") = new lbls2(x, y, l, Array(sz), Array(xoff), Array(yoff), Array(clr), fnt)
+  def apply(x: Array[Double], y: Array[Double], l: Array[String], sz: Array[Int], xoff: Array[Int], yoff: Array[Int], clr: Array[clr], rot: Array[Int], fnt: String) = new lbls2(x, y, l, sz, xoff, yoff, clr, rot, fnt)
+  def apply(x: Array[Double], y: Array[Double], l: Array[String], sz: Int, xoff: Int = 0, yoff: Int = 0, clr: clr = 0, rot: Int = 0, fnt: String = "Arial") = new lbls2(x, y, l, Array(sz), Array(xoff), Array(yoff), Array(clr), Array(rot), fnt)
 }
 
 /**
@@ -305,6 +305,20 @@ object x_axs {
 object x_axs_dttm {
   def apply() = new x_axs(frmt = Some(new SimpleDateFormat("HH:mm:ss.SSS\nyyyy.MM.dd").format))
   def apply(sz: Int) = new x_axs(fnt_sz = Some(() => sz), frmt = Some(new SimpleDateFormat("HH:mm:ss.SSS\nyyyy.MM.dd").format))
+}
+
+object x_axs_inst {
+  import java.time._
+  import java.time.format._
+
+  def foo(format_str:String, l:Double) = {
+    val inst = Instant.ofEpochSecond(l.toLong/1000000000, l.toLong%1000000000)
+    val dt = LocalDateTime.ofInstant(inst, ZoneOffset.UTC)
+    DateTimeFormatter.ofPattern(format_str).format(dt)
+  }
+
+  def apply(frmt: String = "HH:mm:ss.SSSSSSSSS") = new x_axs(frmt = Some(foo(frmt, _:Double)))
+  def apply(sz: Int, frmt: String) = new x_axs(fnt_sz = Some(() => sz), frmt = Some(foo(frmt, _:Double)))
 }
 object x_axs_dt {
   def apply() = new x_axs(frmt = Some(new SimpleDateFormat("yyyy.MM.dd").format))

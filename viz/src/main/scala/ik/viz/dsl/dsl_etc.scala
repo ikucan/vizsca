@@ -187,7 +187,7 @@ class plt_hlpr {
   def add_lbls(l: lbls2) = {
     val foo = new dscrt_foo(l.x, l.y)
     //class sctr_lbls2(sktch: p_sktch, f: foo, l: Array[String], sz: Array[Float], clr: Array[clr], fnt: Array[clr]) extends p_area(sktch) with plot {
-    plots += new sctr_lbls2(sktch, foo, l.l, l.sz, l.xoff, l.yoff, l.clr, l.fnt) {
+    plots += new sctr_lbls2(sktch, foo, l.l, l.sz, l.xoff, l.yoff, l.clr, l.rot, l.fnt) {
       set_drwbl_box(this)
     }
   }

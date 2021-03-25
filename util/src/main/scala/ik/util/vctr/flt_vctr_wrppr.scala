@@ -148,6 +148,13 @@ class flt_vctr_wrppr(v: Array[Float]) extends vctr[Float](v) with vctr_arthmtc[F
     for (i <- 1 until v.size) rv(i) = v(i) + rv(i - 1)
     rv
   }
+
+  override def is_nan: Array[Boolean] = {
+    val rv = new Array[Boolean](v.size)
+    for (i <- 1 until v.size) rv(i) = v(i).isNaN
+    rv
+  }
+
   /**
    * summary trait
    */

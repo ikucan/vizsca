@@ -24,10 +24,33 @@ object csv {
 
   def str2inst(vals: Array[String], frmt: Option[String] = None, tz_offst: Int = 0) = {
     if (frmt == None) {
-      vals map { x => if (x.size == 0) 0 else Instant.parse(x).toEpochMilli() }
+      vals map { x => if (x.size == 0) 0l else Instant.parse(x).toEpochMilli() }
     } else {
       val fmt = DateTimeFormatter.ofPattern(frmt.get)
-      vals map { x => if (x.size == 0) 0 else LocalDateTime.parse(x, fmt).toInstant(ZoneOffset.ofHours(tz_offst)).toEpochMilli() }
+      vals map { x => if (x.size == 0) 0l else LocalDateTime.parse(x, fmt).toInstant(ZoneOffset.ofHours(tz_offst)).toEpochMilli() }
+    }
+  }
+
+  def str2inst_ns(vals: Array[String], frmt: Option[String] = None, tz_offst: Int = 0) = {
+    def inst2ns(inst:Instant):Long = inst.getEpochSecond()*1000000000 + inst.getNano()
+    if (frmt == None) {
+      vals map { x => if (x.size == 0) 0l else inst2ns(Instant.parse(x)) }
+    } else {
+      val fmt = DateTimeFormatter.ofPattern(frmt.get)
+      vals map { x => if (x.size == 0) 0l else inst2ns(LocalDateTime.parse(x, fmt).toInstant(ZoneOffset.ofHours(tz_offst))) }
+    }
+  }
+  def str2inst_ns_trunc(vals: Array[String], frmt: Option[String] = None, tz_offst: Int = 0) = {
+    def inst2ns(inst:Instant):Long = {
+      val dt = LocalDateTime.ofInstant(inst, ZoneOffset.UTC)
+      val truncated_inst = dt.minusYears(dt.getYear-1970).toInstant(ZoneOffset.UTC)  // shift the year to 0 epoch year to minimise the magnitude of the number
+      truncated_inst.getEpochSecond()*1000000000 + inst.getNano()
+    }
+    if (frmt == None) {
+      vals map { x => if (x.size == 0) 0l else inst2ns(Instant.parse(x)) }
+    } else {
+      val fmt = DateTimeFormatter.ofPattern(frmt.get)
+      vals map { x => if (x.size == 0) 0l else inst2ns(LocalDateTime.parse(x, fmt).toInstant(ZoneOffset.ofHours(tz_offst))) }
     }
   }
 

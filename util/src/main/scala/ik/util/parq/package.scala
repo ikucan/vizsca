@@ -41,6 +41,7 @@ package object parq {
         case PrimitiveTypeName.INT64 => new col_bldr[Long](n_records)
         case PrimitiveTypeName.INT32 => new col_bldr[Int](n_records)
         case PrimitiveTypeName.FLOAT => new col_bldr[Float](n_records)
+        case PrimitiveTypeName.BOOLEAN => new col_bldr[Boolean](n_records)
         case PrimitiveTypeName.BINARY => new col_bldr[String](n_records)
         case x => throw new RuntimeException(raw"unhandled frame type:>> ${x}")
       }
@@ -75,6 +76,7 @@ package object parq {
                   bldrs(col_idx).asInstanceOf[col_bldr[Float]] += Float.NaN
               }
             case PrimitiveTypeName.BINARY => bldrs(col_idx).asInstanceOf[col_bldr[String]] += simpleGroup.getBinary(col_idx, 0).toStringUsingUTF8
+            case PrimitiveTypeName.BOOLEAN => bldrs(col_idx).asInstanceOf[col_bldr[Boolean]] += simpleGroup.getBoolean(col_idx, 0)
             case x => throw new RuntimeException(raw"unhandled frame type:>> ${x}")
           }
         }
@@ -92,6 +94,7 @@ package object parq {
           case PrimitiveTypeName.INT32 => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Int]].arr)
           case PrimitiveTypeName.FLOAT => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Float]].arr)
           case PrimitiveTypeName.BINARY => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Symbol]].arr)
+          case PrimitiveTypeName.BOOLEAN => df.set_arg(names(col_idx), bldrs(col_idx).asInstanceOf[col_bldr[Boolean]].arr)
           case x => throw new RuntimeException(raw"unhandled frame type:>> ${x}")
         }
       }

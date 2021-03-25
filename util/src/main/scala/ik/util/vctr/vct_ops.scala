@@ -85,10 +85,11 @@ trait vctr_ops[T] {
   def abs: Array[T]
   def log: Array[T]
   def dff: Array[T]
+  def is_nan: Array[Boolean]
   def unary_-- : Array[T] = dff
   def cumsum: Array[T]
   def unary_++ : Array[T] = cumsum
-
+  //def forward_fll : Array[T]
 }
 
 /**

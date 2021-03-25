@@ -17,31 +17,41 @@ import processing.core.PFont
 //import ik.util.mcro.hlpr.dmp
 
 /**
- * a plot
- */
+  * a plot
+  */
 trait plot {
   def bnds: (Double, Double, Double, Double)
+
   def zoom(x0: Double, x1: Double, y0: Double, y1: Double)
+
   def clck(x0: Double, x1: Double) = {}
+
   def x_tcks(n: Int): Array[Double]
+
   def y_tcks(n: Int): Array[Double]
+
   var chngd: () => (Unit) = () => Unit
 }
 
 /**
- * line plot. vanilla x-y plot
- */
+  * line plot. vanilla x-y plot
+  */
 class line_grph(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, sz: Float) extends p_area(sktch) with plot {
   var xy = f.slct(N = 5000)
   var (dx, dy, plt_xoff, plt_yoff) = (.0, .0, .0, .0)
 
   override def bnds = (f.x_min, f.x_max, f.y_min, f.y_max)
+
   override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     xy = f.slct(x0 = x0, x1 = x1, N = 5000)
-    dx = w().toDouble / (x1 - x0); dy = h().toDouble / (y1 - y0)
-    plt_xoff = x0; plt_yoff = y0
+    dx = w().toDouble / (x1 - x0);
+    dy = h().toDouble / (y1 - y0)
+    plt_xoff = x0;
+    plt_yoff = y0
   }
+
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
 
   override def draw_impl = if (visible || D) {
@@ -71,19 +81,24 @@ class line_grph(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr,
 }
 
 /**
- * the tick line plot. draw a line in tick "style"
- */
+  * the tick line plot. draw a line in tick "style"
+  */
 class tick_grph(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, sz: Float) extends p_area(sktch) with plot {
   var xy = f.slct(N = 5000)
   var (dx, dy, plt_xoff, plt_yoff) = (.0, .0, .0, .0)
 
   override def bnds = (f.x_min, f.x_max, f.y_min, f.y_max)
+
   override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     xy = f.slct(x0 = x0, x1 = x1, N = 5000)
-    dx = w().toDouble / (x1 - x0); dy = h().toDouble / (y1 - y0)
-    plt_xoff = x0; plt_yoff = y0
+    dx = w().toDouble / (x1 - x0);
+    dy = h().toDouble / (y1 - y0)
+    plt_xoff = x0;
+    plt_yoff = y0
   }
+
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
 
   override def draw_impl = if (visible || D) {
@@ -94,10 +109,11 @@ class tick_grph(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr,
       p.strokeWeight(sz)
       val (xs, ys) = (xy._1, xy._2)
       (1 until xs.size) foreach { i =>
+
         /**
-         * split the line between p1, p2 into two orthogonal lines.
-         * i.e. compute an intermediate point: (x2, y1)
-         */
+          * split the line between p1, p2 into two orthogonal lines.
+          * i.e. compute an intermediate point: (x2, y1)
+          */
         val (xx1, yy1) = (((xs(i - 1) - plt_xoff) * dx).toFloat + xoff(), h() + yoff() - ((ys(i - 1) - plt_yoff) * dy).toFloat)
         val (xx2, yy2) = (((xs(i) - plt_xoff) * dx).toFloat + xoff(), h() + yoff() - ((ys(i) - plt_yoff) * dy).toFloat)
         lt.drw(this, xx1, yy1, xx2, yy1, sz) // horizontal component
@@ -119,21 +135,26 @@ class tick_grph(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr,
 }
 
 /**
- * TODO:>> this should replace the tick plot above....
- * need to add the three new features : vertical component first, options on whether
- * to actually draw the horizontal and vertical components respectively
- */
+  * TODO:>> this should replace the tick plot above....
+  * need to add the three new features : vertical component first, options on whether
+  * to actually draw the horizontal and vertical components respectively
+  */
 class mnnhtn(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, sz: Float, v_frst: Boolean, h_drw: Boolean, v_drw: Boolean) extends p_area(sktch) with plot {
   var xy = f.slct(N = 5000)
   var (dx, dy, plt_xoff, plt_yoff) = (.0, .0, .0, .0)
 
   override def bnds = (f.x_min, f.x_max, f.y_min, f.y_max)
+
   override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     xy = f.slct(x0 = x0, x1 = x1, N = 5000)
-    dx = w().toDouble / (x1 - x0); dy = h().toDouble / (y1 - y0)
-    plt_xoff = x0; plt_yoff = y0
+    dx = w().toDouble / (x1 - x0);
+    dy = h().toDouble / (y1 - y0)
+    plt_xoff = x0;
+    plt_yoff = y0
   }
+
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
 
   override def draw_impl = if (visible || D) {
@@ -168,25 +189,31 @@ class mnnhtn(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, sz
 }
 
 /**
- * draw a line segments between two functions
- */
+  * draw a line segments between two functions
+  */
 class seg_plt(sktch: p_sktch, val f1: foo, val f2: foo, lt: ln_typ, c_strk: clr, c_fll: clr, sz: Float) extends p_area(sktch) with plot {
 
   var (xy1, xy2) = (f1.slct(N = 5000), f2.slct(N = 5000))
   var (dx, dy, plt_xoff, plt_yoff) = (.0, .0, .0, .0)
 
   override def bnds = (min(f1.x_min, f2.x_min), max(f1.x_max, f2.x_max), min(f1.y_min, f2.y_min), max(f1.y_max, f2.y_max))
+
   override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     val (xxy1, xxy2) = foo.co_slct(f1, f2, x0, x1, y0, y1, N = 5000)
 
     //if (xxy1._1.size != xxy2._1.size) throw new p_err("error. seg_area needs functions of equal size")
     assert(xxy1._1.size == xxy2._1.size, "error. seg_area needs functions of equal size")
 
-    dx = w().toDouble / (x1 - x0); dy = h().toDouble / (y1 - y0)
-    plt_xoff = x0; plt_yoff = y0
-    xy1 = xxy1; xy2 = xxy2
+    dx = w().toDouble / (x1 - x0);
+    dy = h().toDouble / (y1 - y0)
+    plt_xoff = x0;
+    plt_yoff = y0
+    xy1 = xxy1;
+    xy2 = xxy2
   }
+
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
 
   override def draw_impl = if (visible || D) {
@@ -211,8 +238,8 @@ class seg_plt(sktch: p_sktch, val f1: foo, val f2: foo, lt: ln_typ, c_strk: clr,
 }
 
 /**
- * draw area tiles between two functions
- */
+  * draw area tiles between two functions
+  */
 class seg_area(sktch: p_sktch, val f1: foo, val f2: foo, c_strk: clr, c_fll: clr, sz: Float) extends p_area(sktch) with plot {
   //abstract function. implemntation provides to draw the segement between (x0, x1, y0, y1)
 
@@ -220,11 +247,11 @@ class seg_area(sktch: p_sktch, val f1: foo, val f2: foo, c_strk: clr, c_fll: clr
   var (dx, dy, plt_xoff, plt_yoff) = (.0, .0, .0, .0)
 
   override def bnds = (min(f1.x_min, f2.x_min), max(f1.x_max, f2.x_max), min(f1.y_min, f2.y_min), max(f1.y_max, f2.y_max))
-  override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
 
+  override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     /**
-     * do a manual select as indices need to be lined up across both functions
-     */
+      * do a manual select as indices need to be lined up across both functions
+      */
     val idx = (f1.x >= x0 || f2.x >= x0) && (f1.x <= x1 || f2.x <= x1)
     xy1 = (f1.x(idx), f1.y(idx))
     xy2 = (f2.x(idx), f2.y(idx))
@@ -232,11 +259,15 @@ class seg_area(sktch: p_sktch, val f1: foo, val f2: foo, c_strk: clr, c_fll: clr
     //if (xy1._1.size != xy1._2.size) throw new p_err("error. seg_area needs functions of equal size")
     assert(xy1._1.size == xy1._2.size, "error. seg_area needs functions of equal size")
 
-    dx = w().toDouble / (x1 - x0); dy = h().toDouble / (y1 - y0)
-    plt_xoff = x0; plt_yoff = y0
+    dx = w().toDouble / (x1 - x0);
+    dy = h().toDouble / (y1 - y0)
+    plt_xoff = x0;
+    plt_yoff = y0
 
   }
+
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
 
   override def draw_impl = if (visible || D) {
@@ -270,19 +301,23 @@ class seg_area(sktch: p_sktch, val f1: foo, val f2: foo, c_strk: clr, c_fll: clr
 }
 
 /**
- * vertical segmentation plot. vertical lines are drawn through the plot on provided x co-ordinates
- */
+  * vertical segmentation plot. vertical lines are drawn through the plot on provided x co-ordinates
+  */
 class vlne_plt(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, sz: Float) extends p_area(sktch) with plot {
   var xy = f.slct(N = 5000)
 
   var (dx, plt_xoff) = (.0, .0)
+
   override def bnds = (f.x_min, f.x_max, f.y_min, f.y_max)
+
   override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     xy = f.slct(x0 = x0, x1 = x1, N = 5000)
     dx = w().toDouble / (x1 - x0)
     plt_xoff = x0;
   }
+
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray
 
   override def draw_impl = if (visible || D) {
@@ -300,15 +335,17 @@ class vlne_plt(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, 
 }
 
 /**
- * horizontal segmentation plot. horizontal lines are drawn through the plot on provided y co-ordinates
- * note! :
- */
+  * horizontal segmentation plot. horizontal lines are drawn through the plot on provided y co-ordinates
+  * note! :
+  */
 class hlne_plt(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, sz: Float) extends p_area(sktch) with plot {
 
   var xy = f.slct(N = 5000)
 
   var (dy, plt_yoff) = (.0, .0)
+
   override def bnds = (f.y_min, f.y_max, f.x_min, f.x_max)
+
   override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     xy = f.slct(x0 = y0, x1 = y1, N = 5000)
     dy = h().toDouble / (y1 - y0)
@@ -316,6 +353,7 @@ class hlne_plt(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, 
   }
 
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray
 
   override def draw_impl = if (visible || D) {
@@ -334,9 +372,9 @@ class hlne_plt(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, 
 }
 
 /**
- * a scatter plot widget.
- *
- */
+  * a scatter plot widget.
+  *
+  */
 //@deprecated("migration", "sctr_plt2")
 //class sctr_plt(sktch: p_sktch, val f: foo, s: shape, c_strk: clr, c_fll: clr, sz: Float) extends p_area(sktch) with plot {
 //
@@ -379,30 +417,38 @@ class hlne_plt(sktch: p_sktch, val f: foo, lt: ln_typ, c_strk: clr, c_fll: clr, 
 //}
 
 class sctr_plt2(sktch: p_sktch, f: foo, s: Array[shp2], c_strk: Array[clr], c_fll: Array[clr], sz: Array[Float], ln_sz: Array[Float]) extends p_area(sktch) with plot {
-  f.cbck = _ => { chngd() }
+  f.cbck = _ => {
+    chngd()
+  }
   var N = 5000
   var idx = (0 until f.x.size).toArray.ssmpl(N)
   var (dx, dy, plt_xoff, plt_yoff) = (.0, .0, .0, .0)
+
   override def bnds = (f.x_min, f.x_max, f.y_min, f.y_max)
+
   override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     /**
-     * find the indices of the area to be plotted
-     * subsample if required
-     */
+      * find the indices of the area to be plotted
+      * subsample if required
+      */
     idx = {
       var (i0, i1) = f.x.srch(x0, x1)
       val idx = (i0 to i1).toArray
       if (idx.size > N) idx.ssmpl(N)
       else idx
     }
+
     /**
-     * compute scaling factors and offsets
-     */
+      * compute scaling factors and offsets
+      */
     dx = w().toDouble / (x1 - x0)
     dy = h().toDouble / (y1 - y0)
-    plt_xoff = x0; plt_yoff = y0
+    plt_xoff = x0;
+    plt_yoff = y0
   }
+
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
 
   override def draw_impl = {
@@ -432,33 +478,41 @@ class sctr_plt2(sktch: p_sktch, f: foo, s: Array[shp2], c_strk: Array[clr], c_fl
 }
 
 /**
- * a scatterplot like drawing of labels - plot some labels at some co-ordinates
- */
-class sctr_lbls2(sktch: p_sktch, f: foo, l: Array[String], sz: Array[Int], lbl_xoff: Array[Int], lbl_yoff: Array[Int], clr: Array[clr], fnt: String) extends p_area(sktch) with plot {
-  f.cbck = _ => { chngd() }
+  * a scatterplot like drawing of labels - plot some labels at some co-ordinates
+  */
+class sctr_lbls2(sktch: p_sktch, f: foo, l: Array[String], sz: Array[Int], lbl_xoff: Array[Int], lbl_yoff: Array[Int], clr: Array[clr], rot: Array[Int], fnt: String) extends p_area(sktch) with plot {
+  f.cbck = _ => {
+    chngd()
+  }
   var N = 1000
   var idx = (0 until f.x.size).toArray.ssmpl(N)
   var (dx, dy, plt_xoff, plt_yoff) = (.0, .0, .0, .0)
+
   override def bnds = (f.x_min, f.x_max, f.y_min, f.y_max)
+
   override def zoom(x0: Double, x1: Double, y0: Double, y1: Double) = {
     /**
-     * find the indices of the area to be plotted
-     * subsample if required
-     */
+      * find the indices of the area to be plotted
+      * subsample if required
+      */
     idx = {
       var (i0, i1) = f.x.srch(x0, x1)
       val idx = (i0 to i1).toArray
       if (idx.size > N) idx.ssmpl(N)
       else idx
     }
+
     /**
-     * compute scaling factors and offsets
-     */
+      * compute scaling factors and offsets
+      */
     dx = w().toDouble / (x1 - x0)
     dy = h().toDouble / (y1 - y0)
-    plt_xoff = x0; plt_yoff = y0
+    plt_xoff = x0;
+    plt_yoff = y0
   }
+
   override def x_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
+
   override def y_tcks(n: Int): Array[Double] = (0 until n) map (_.toDouble) toArray;
 
   override def draw_impl = {
@@ -472,7 +526,20 @@ class sctr_lbls2(sktch: p_sktch, f: foo, l: Array[String], sz: Array[Int], lbl_x
         p.fill(clr(i % clr.size).c)
         p.textFont(new PFont(new Font(fnt, Font.PLAIN, sz(i % sz.size)), false))
         val (plt_x, plt_y) = (((xs(i) - plt_xoff) * dx).toFloat + xoff() + lbl_xoff(i % lbl_xoff.size), h() + yoff() - ((ys(i) - plt_yoff) * dy).toFloat - lbl_yoff(i % lbl_yoff.size))
-        if (in(bx, plt_x, plt_y)) p.text(l(i % l.size), plt_x, plt_y)
+        val txt_angl = rot(i % sz.size)
+        if (in(bx, plt_x, plt_y)) {
+          p.textAlign(PConstants.LEFT, PConstants.CENTER);
+          if (txt_angl != 0) {
+            p.pushMatrix()
+            p.translate(plt_x, plt_y)
+            p.rotate(processing.core.PApplet.radians(txt_angl))
+            p.text(l(i % l.size), 0, 0)
+            p.popMatrix()
+          }
+          else
+            p.text(l(i % l.size), plt_x, plt_y)
+
+        }
       }
     }
     if (D) drw_dbg
@@ -491,71 +558,86 @@ class sctr_lbls2(sktch: p_sktch, f: foo, l: Array[String], sz: Array[Int], lbl_x
 }
 
 /**
- * a container for a multitude of plots. it is itself a plot as it extends
- * the plot trait
- *
- *   +------+     +--------+
- *   | plt  |<--<>|  plts  |
- *   |      |<i---|        |
- *   +------+     +--------+
- *   @author iztok
- */
+  * a container for a multitude of plots. it is itself a plot as it extends
+  * the plot trait
+  *
+  * +------+     +--------+
+  * | plt  |<--<>|  plts  |
+  * |      |<|---|        |
+  * +------+     +--------+
+  *
+  * @author iztok
+  */
 class plot_lst extends plot {
   private val plts = new HashSet[plot]
   /**
-   * union of domains and ranges of all plotted functions. can only
-   * change when a plot (with a function) is added or removed
-   */
+    * union of domains and ranges of all plotted functions. can only
+    * change when a plot (with a function) is added or removed
+    */
   private var (x_min, x_max, y_min, y_max) = (.0, .0, .0, .0)
   /**
-   * currently selected window (a subset of above). changes when
-   * a zoom window is changed
-   */
+    * currently selected window (a subset of above). changes when
+    * a zoom window is changed
+    */
   private var (w_x_min, w_x_max, w_y_min, w_y_max) = (.0, .0, .0, .0)
+
   /**
-   * give bounds of this (composed) plot
-   */
+    * give bounds of this (composed) plot
+    */
   override def bnds = (x_min, x_max, y_min, y_max)
+
   /**
-   * zoom the plot to bounds specified by
-   */
+    * zoom the plot to bounds specified by
+    */
   override def zoom(xw0: Double, xw1: Double, yw0: Double, yw1: Double) = {
     //dmp(">> zooming to : ", xw0, xw1, yw0, yw1)
     w2c(xw0, xw1, yw0, yw1)
     plts foreach { p => p.zoom(w_x_min, w_x_max, w_y_min, w_y_max) }
   }
+
   /**
-   * click on a plot
-   */
+    * click on a plot
+    */
   override def clck(x: Double, y: Double) = plts foreach (_.clck(x, y))
+
   /**
-   * provide tick values to be used as labels along the x-axis
-   */
+    * provide tick values to be used as labels along the x-axis
+    */
   override def x_tcks(n: Int): Array[Double] = {
     val dx = (w_x_max - w_x_min) / (n - 1)
     (0 until n) map (_.toDouble * dx + w_x_min) toArray
   }
+
   /**
-   * provide tick values to be used as labels along the y-axis
-   */
+    * provide tick values to be used as labels along the y-axis
+    */
   override def y_tcks(n: Int): Array[Double] = {
     val dy = (w_y_max - w_y_min) / (n - 1)
     (0 until n) map (_.toDouble * dy + w_y_min) toArray
   }
-  /**
-   * add a plot to the group and adjust new bounds accordingly
-   */
-  def +=(p: plot) = { plts += p; scn; p.chngd = chngd }
-  /**
-   * remove a plot from the group (+ adjust bounds)
-   */
-  def -=(p: plot) = { plts -= p; scn }
 
   /**
-   *  scan all plots for boundary adjust as necessary
-   */
+    * add a plot to the group and adjust new bounds accordingly
+    */
+  def +=(p: plot) = {
+    plts += p; scn; p.chngd = chngd
+  }
+
+  /**
+    * remove a plot from the group (+ adjust bounds)
+    */
+  def -=(p: plot) = {
+    plts -= p; scn
+  }
+
+  /**
+    * scan all plots for boundary adjust as necessary
+    */
   def scn = {
-    x_min = Double.MaxValue; x_max = Double.MinValue; y_min = Double.MaxValue; y_max = Double.MinValue
+    x_min = Double.MaxValue;
+    x_max = Double.MinValue;
+    y_min = Double.MaxValue;
+    y_max = Double.MinValue
     plts foreach { p =>
       val (f_x_min, f_x_max, f_y_min, f_y_max) = p.bnds
       //dmp("plots scan - adding foo     : ", f_x_min, f_x_max, f_y_min, f_y_max)
@@ -569,13 +651,16 @@ class plot_lst extends plot {
   }
 
   /**
-   * transform window co-ordinates (0-1) into cartesian (x,y)
-   */
+    * transform window co-ordinates (0-1) into cartesian (x,y)
+    */
   private def w2c(xw0: Double, xw1: Double, yw0: Double, yw1: Double) = {
     //dmp("w2c - selected window: ", xw0, xw1, yw0, yw1)
     //dmp("w2c - selected window: ", x_min, xmax, ymin, ymax)
     val (dx, dy) = (x_max - x_min, y_max - y_min)
-    w_x_min = x_min + xw0 * dx; w_x_max = x_min + xw1 * dx; w_y_min = y_min + yw0 * dy; w_y_max = y_min + yw1 * dy
+    w_x_min = x_min + xw0 * dx;
+    w_x_max = x_min + xw1 * dx;
+    w_y_min = y_min + yw0 * dy;
+    w_y_max = y_min + yw1 * dy
 
     //dmp("w2c - selected window: ", w_x_min, w_x_max, w_y_min, w_y_max)
   }

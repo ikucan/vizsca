@@ -32,6 +32,13 @@ lazy val parq_lbs = Seq(
   excludeDependencies += "org.slf4j" % "log4j-over-slf4j"
 )
 
+//// https://mvnrepository.com/artifact/org.apache.arrow/arrow-memory
+//val varrw = "0.16.0"
+//lazy val arrw_lbs = Seq(
+//  libraryDependencies += "org.apache.arrow" % "arrow-vector" % varrw,
+//  libraryDependencies += "org.apache.arrow" % "arrow-memory" % varrw
+//)
+
 /**
   * common settings
   */
@@ -40,7 +47,7 @@ lazy val cmmn = Seq(
   version := "0.1.0",
   scalaVersion := "2.12.6",
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:reflectiveCalls", "-language:postfixOps", "-language:implicitConversions", " -language:existentials"),
-  javaOptions in run += "-Xmx8G",
+  javaOptions in run += "-Xmx16G",
   //javaOptions in run += "-Djava.library.path=/workstem/g3/jvm/lib/linux",
   fork := true,
   connectInput in run := true,

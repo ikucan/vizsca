@@ -36,6 +36,7 @@ class dbl_vctr_wrppr(v: Array[Double]) extends vctr[Double](v) with vctr_arthmtc
     chk(v2)
     val rv = new Array[Double](v.size)
     for (i <- 0 until v.size) rv(i) = v(i) - v2(i)
+    for (i <- 0 until v.size) rv(i) = v(i) - v2(i)
     rv
   }
 
@@ -144,6 +145,11 @@ class dbl_vctr_wrppr(v: Array[Double]) extends vctr[Double](v) with vctr_arthmtc
   override def cumsum: Array[Double] = {
     val rv = new Array[Double](v.size)
     for (i <- 1 until v.size) rv(i) = v(i) + rv(i - 1)
+    rv
+  }
+  override def is_nan: Array[Boolean] = {
+    val rv = new Array[Boolean](v.size)
+    for (i <- 1 until v.size) rv(i) = v(i).isNaN
     rv
   }
 
