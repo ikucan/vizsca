@@ -187,7 +187,7 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "/usr/lib64/jvm/java-17-openjdk-17",
+                "home": "/usr/lib64/jvm/java-11-openjdk-11",
                 "options": [
                     "-Duser.dir=/workstem/vizsca/project/project"
                 ]
